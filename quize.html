@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>game webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            background:  url(bg.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            margin-top: 100px;
+        }
+        .quiz-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: transparent;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .options button {
+            display: block;
+            width: 90%;
+            background: #007BFF;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options button:hover {
+            background: #0056b3;
+        }
+        .score-container {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .start-button {
+            font-size: 18px;
+            background: pink;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition:  0.3s;
+        }
+        .start-button:hover {
+            background: purple;
+        }
+        .backbtn{
+            font-size: 18px;
+            background: pink;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition:  0.3s;
+        }
+        .backbtn a{
+            text-decoration: none;
+            color: white;
+        }
+        .backbtn:hover{
+            background: purple;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container" id="quiz-container">
+        <h1>Quiz Game</h1>
+        <div class="question" id="question">Press Start to begin the quiz!</div>
+        <div class="options" id="options">
+            <!-- Options will be dynamically added here -->
+        </div>
+        <button class="start-button" id="start-button">Start Quiz</button>
+        <div class="score-container" id="score-container"></div>
+        <button class="backbtn" ><a href="index.html">back</a></button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Who is the GOAT of football?",
+                options: ["Haaland", "Ronaldo", "Salah", "Messi"],
+                correct: 3 // Index of the correct answer
+            },
+            {
+                question: "Which pair is more volatile in forex?",
+                options: ["Gold", "GBP/USD", "EUR/USD", "CAD/CHF"],
+                correct: 2
+            },
+            {
+                question: "What was the capital of Nigeria when I was born?",
+                options: ["Edo", "Anambra", "Lagos", "Abuja"],
+                correct: 1
+            },
+            {
+                question: "Who wrote 'Money Matters'?",
+                options: ["Mark Twain", "Waris Bulia", "Jimoh Rosheed", "Seliom Shagamu"],
+                correct: 3
+            },
+            {
+                question: "Why don't you have Bitcoin?",
+                options: ["No money", "I don't need it", "howbfar relax o", "I have it"],
+                correct: 0
+            },
+            {
+                question: "Who is BigJago?",
+                options: ["A fool", "Mr. Money", "Olowo Girls", "Big Fool"],
+                correct: 1
+            },
+            {
+                question: "Who is the greatest musician in Nigeria?",
+                options: ["Seyi Vibez", "Burna Boy", "Olamide", "Wizkid"],
+                correct: 1
+            },
+            {
+                question: "Is Davido an artist?",
+                options: ["No", "Upcoming", "Yes", "I don't know"],
+                correct: 2
+            },
+            {
+                question: "Who is better?",
+                options: ["TML", "OML", "Rybenna", "Ayomaff"],
+                correct: 0
+            },
+            {
+                question: "How's your side before December?",
+                options: [
+                    "omo we dey hour papa house",
+                    "papapa supey way joor",
+                    "I dey buh money no dey",
+                    "mama say make i sleep say she go carry me go 'Mr Bigs'"
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+        const startButton = document.getElementById("start-button");
+        const scoreContainer = document.getElementById("score-container");
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            startButton.style.display = "none"; // Hide start button
+            scoreContainer.textContent = ""; // Reset score
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            optionsElement.innerHTML = ""; // Clear previous options
+
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => handleAnswer(index));
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function handleAnswer(selectedIndex) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selectedIndex === currentQuestion.correct) {
+                score++;
+            }
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            questionElement.textContent = "Quiz Over!";
+            optionsElement.innerHTML = "";
+            scoreContainer.textContent = `Your final score is: ${score} / ${questions.length}`;
+            startButton.style.display = "inline-block"; // Show start button for replay
+        }
+
+        startButton.addEventListener("click", startQuiz);
+    </script>
+</body>
+</html>
